@@ -13,7 +13,7 @@ const game = {
         width: 400,
         height: 700
     },
-    velX: 30,
+    velX: 10,
     velY: 0,
     gravity: 10,
     // BACKGROUND PROPERTIES
@@ -37,6 +37,8 @@ const game = {
     // SOUNDS
     jumpSoundSrc: '../sounds/jump.wav',
     jumpSound: undefined,
+    mainSoundSrc: '../sounds/main.mp3',
+    mainSound: undefined,
     init() {
         // SELECCIONAR CANVAS Y ASOCIAR CONTEXTO
         this.canvasDOM = document.querySelector('#canvas')
@@ -49,10 +51,11 @@ const game = {
         this.canvasDOM.height = this.gameSize.height
     },
     start() {
+        this.mainSound = new Sound(this.mainSoundSrc)
         this.mainBack = new Background(this.ctx, this.gameSize, this.mainBackSrc, this.velY)
         this.qbert = new Player(this.ctx, this.gameSize, this.qbertSrc, this.playerSize, this.velX, this.velY, this.gravity, this.platformsArr, this.jumpSize)
         this.jumpSound = new Sound(this.jumpSoundSrc)
-        for (let i = 0; i < this.gameSize.height; i += (Math.random() * (100 - 50) + 50)) {
+        for (let i = -5000; i < this.gameSize.height; i += (Math.random() * (100 - 50) + 50)) {
             this.platformsArr.push(new Platforms(this.ctx, this.gameSize, this.platformSrc, i))
         }
         let counter = 0
@@ -67,6 +70,7 @@ const game = {
             this.drawAll()
             this.moveAll()
         }, 1000 / this.FPS)
+        this.mainSound.play()
     },
     drawAll() {
         this.mainBack.draw()
@@ -88,6 +92,14 @@ const game = {
                 ((this.qbert._playerPos.x + this.qbert._playerSize.width) >= platform._platformPos.x) &&
                 ((this.qbert._playerPos.y + this.qbert._playerSize.height) <= (platform._platformPos.y + platform._platformSize.height))
         })
+    },
+    goUp() {
+        this.platformsArr.forEach(platform => {
+            platform._platformPos.y += (this.qbert._playerPosOrig.y - this.qbert._playerPos.y)
+        })
+        // for (let i = 0; i < this.gameSize.height / 2; i += (Math.random() * (this.gameSize.height / 2))) {
+        //     this.platformsArr.push(new Platforms(this.ctx, this.gameSize, this.platformSrc, i))
+        // }
     }
 }
 
