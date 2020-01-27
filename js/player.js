@@ -33,23 +33,32 @@ class Player {
     }
 
     move() {
-        if (this._playerPos.y <= this._gameSize.height / 2) {
+        // LA GRAVEDAD 
+        this._velY += this._gravity
+        if (this._playerPos.y <= this._gameSize.height / 2 && this._velY <= 0) {
             game.goUp()
+        } else {
+            this._playerPos.y += this._velY
         }
-        this._playerPos.y += this._gravity
-        this._playerPos.y += this._velY
-
-        if (game.checkCollision()) {
+        // SI COLISIONA Y ESTA BAJANDO
+        console.log(`VELY ${this._velY}`)
+        if (game.checkCollision() && this._velY >= 0) {
             game.jumpSound.play()
             this._playerPosOrig.y = this._playerPos.y
             this._playerPosOrig.x = this._playerPos.x
-            this._velY = -this._gravity * 2
-        } else {
-            if (this._playerPos.y <= (this._playerPosOrig.y - this._jumpSize)) {
-                this._velY += 0.5
-                this._velY >= 0 ? this._velY = 0 : null
-            }
+            this._velY -= 20
+            console.log(`POS ORIG ${this._playerPosOrig.y}`)
         }
+
+        // this.ySpeed += gravity;
+        // if (this.y <= screen.height / 2 - 200 && this.ySpeed <= 0) {
+        //     for (var i = 0; i < blocks.length; i++) {
+        //         blocks[i].y -= this.ySpeed;
+        //     }
+        // } else {
+        //     this.y += this.ySpeed;
+        // }
+        // yDistanceTravelled -= this.ySpeed;
     }
     setListener() {
 

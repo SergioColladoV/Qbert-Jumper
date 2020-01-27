@@ -15,7 +15,7 @@ const game = {
     },
     velX: 10,
     velY: 0,
-    gravity: 10,
+    gravity: 0.5,
     // BACKGROUND PROPERTIES
     mainBackSrc: '../images/background.jpg',
     mainBack: undefined,
@@ -63,6 +63,7 @@ const game = {
             counter > 1000 ? counter = 0 : null
             //console.warn(`Iteracion ${counter}`)
             counter++
+            console.error(this.qbert._velY)
             if (counter % 30 == 0) {
                 //console.log("Entro")
 
@@ -94,8 +95,9 @@ const game = {
         })
     },
     goUp() {
+        console.log("GO UPPP")
         this.platformsArr.forEach(platform => {
-            platform._platformPos.y += this.qbert._playerPos.y
+            platform._platformPos.y -= this.qbert._velY
         })
         // for (let i = 0; i < this.gameSize.height / 2; i += (Math.random() * (this.gameSize.height / 2))) {
         //     this.platformsArr.push(new Platforms(this.ctx, this.gameSize, this.platformSrc, i))
