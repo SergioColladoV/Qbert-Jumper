@@ -33,7 +33,7 @@ class Player {
     }
 
     move() {
-        if (this._playerPos.y - this._playerSize.height <= this._gameSize.height / 2) {
+        if (this._playerPos.y <= this._gameSize.height / 2) {
             game.goUp()
         }
         this._playerPos.y += this._gravity

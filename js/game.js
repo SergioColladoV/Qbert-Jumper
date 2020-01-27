@@ -95,7 +95,7 @@ const game = {
     },
     goUp() {
         this.platformsArr.forEach(platform => {
-            platform._platformPos.y += (this.qbert._playerPosOrig.y - this.qbert._playerPos.y)
+            platform._platformPos.y += this.qbert._playerPos.y
         })
         // for (let i = 0; i < this.gameSize.height / 2; i += (Math.random() * (this.gameSize.height / 2))) {
         //     this.platformsArr.push(new Platforms(this.ctx, this.gameSize, this.platformSrc, i))
