@@ -9,17 +9,17 @@ class Player {
         this._playerUp = mainPlayerSrc
         this._playerDown = '../images/qbert-left-down.png'
         this._platformsArr = platformsArr
-        this._playerSize = {
+        this._size = {
             width: playerSize.width,
             height: playerSize.height
         }
-        this._playerPos = {
-            x: this._platformsArr[this._platformsArr.length - 1]._platformPos.x,
-            y: this._platformsArr[this._platformsArr.length - 1]._platformPos.y - this._playerSize.height
+        this._pos = {
+            x: this._platformsArr[this._platformsArr.length - 1]._pos.x,
+            y: this._platformsArr[this._platformsArr.length - 1]._pos.y - this._size.height
         }
-        this._playerPosOrig = {
-            x: this._gameSize.width / 2 - this._playerSize.width / 2,
-            y: this._gameSize.height - this._playerSize.height - 200
+        this._posOrig = {
+            x: this._gameSize.width / 2 - this._size.width / 2,
+            y: this._gameSize.height - this._size.height - 200
         }
         this._velX = velX
         this._velY = velY
@@ -30,12 +30,12 @@ class Player {
         this.setListener()
     }
     draw() {
-        this._ctx.drawImage(this._player, this._playerPos.x, this._playerPos.y, this._playerSize.width, this._playerSize.height);
+        this._ctx.drawImage(this._player, this._pos.x, this._pos.y, this._size.width, this._size.height);
     }
 
     move() {
         //  GAME OVER
-        if ((this._playerPos.y + this._playerSize.height) >= this._gameSize.height) {
+        if ((this._pos.y + this._size.height) >= this._gameSize.height) {
             game.gameOver()
         }
         // GRAVEDAD Y DESPLAZAMIENTO DE LA PANTALLA 
@@ -46,11 +46,11 @@ class Player {
         // -----
         // SI EL PLAYER NO ESTA POR ENCIMA DE LA PANTALLA 
         // EL PLAYER SE MUEVE CON SU VELOCIDAD
-        if (this._playerPos.y <= this._gameSize.height / 2 && this._velY <= 0) {
+        if (this._pos.y <= this._gameSize.height / 2 && this._velY <= 0) {
             game.goUp()
 
         } else {
-            this._playerPos.y += this._velY
+            this._pos.y += this._velY
         }
         // SI ESTA BAJANDO
         if (this._velY >= 0) {
@@ -59,10 +59,15 @@ class Player {
             game.qbert._player.src = this._playerUp
         }
         // SI COLISIONA Y ESTA BAJANDO
-        if (game.checkCollision() && this._velY >= 0) {
-            //game.jumpSound.play()
-            this._playerPosOrig.y = this._playerPos.y
-            this._playerPosOrig.x = this._playerPos.x
+        if (game.checkPUCollision() && this._velY >= 0) {
+            game.springSound.play()
+            this._posOrig.y = this._pos.y
+            this._posOrig.x = this._pos.x
+            this._velY = -25
+        } else if (game.checkCollision() && this._velY >= 0) {
+            game.jumpSound.play()
+            this._posOrig.y = this._pos.y
+            this._posOrig.x = this._pos.x
             this._velY = -15
         }
     }
@@ -71,9 +76,9 @@ class Player {
         // MOVIMIENTO IZQUIERDA DERECHA
         document.onkeydown = (e) => {
             if (e.keyCode === 65) {
-                this._playerPos.x -= this._velX
+                this._pos.x -= this._velX
             } else if (e.keyCode === 68) {
-                this._playerPos.x += this._velX
+                this._pos.x += this._velX
             }
         }
     }

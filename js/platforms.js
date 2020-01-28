@@ -4,12 +4,12 @@ class GeneralPlatform {
         this._ctx = ctx
         this._gameSize = gameSize
 
-        this._platformSize = {
+        this._size = {
             width: 100,
             height: 15
         }
-        this._platformPos = {
-            x: Math.random() * (this._gameSize.width - this._platformSize.width),
+        this._pos = {
+            x: Math.random() * (this._gameSize.width - this._size.width),
             y: i
         }
         this._type = 'general'
@@ -17,7 +17,7 @@ class GeneralPlatform {
 
     draw() {
         this._ctx.fillStyle = '#FFFF00'
-        this._ctx.fillRect(this._platformPos.x, this._platformPos.y, this._platformSize.width, this._platformSize.height);
+        this._ctx.fillRect(this._pos.x, this._pos.y, this._size.width, this._size.height);
     }
     move() {}
 }
@@ -33,7 +33,7 @@ class BrokenPlatform extends GeneralPlatform {
         this._type = 'broken'
     }
     draw() {
-        this._ctx.drawImage(this._platform, this._platformPos.x, this._platformPos.y, this._platformSize.width, this._platformSize.height);
+        this._ctx.drawImage(this._platform, this._pos.x, this._pos.y, this._size.width, this._size.height);
     }
     move() {}
 }
@@ -49,14 +49,14 @@ class MovingPlatform extends GeneralPlatform {
     }
     draw() {
         this._ctx.fillStyle = '#40C4FF'
-        this._ctx.fillRect(this._platformPos.x, this._platformPos.y, this._platformSize.width, this._platformSize.height);
+        this._ctx.fillRect(this._pos.x, this._pos.y, this._size.width, this._size.height);
     }
     move() {
-        this._platformPos.x -= this._vel
-        if (this._platformPos.x >= 0) {
+        this._pos.x -= this._vel
+        if (this._pos.x >= 0) {
             this._vel *= -1
         }
-        if (this._platformPos.x + this._platformSize.width <= this._gameSize.width) {
+        if (this._pos.x + this._size.width <= this._gameSize.width) {
             this._vel *= -1
         }
     }

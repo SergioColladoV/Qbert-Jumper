@@ -17,6 +17,7 @@ const game = {
     velY: 0,
     gravity: 0.5,
     level: 10,
+    distanceFromFloor: 0,
     score: 0,
     // BACKGROUND PROPERTIES
     mainBackSrc: '../images/background.jpg',
@@ -33,13 +34,15 @@ const game = {
     qbert: undefined,
     // PLATFORMS ARRAY
     platformsArr: [],
-    // PLATFORM BROKEN
-    platformBrokenSrc: 'tobecompleted',
     // SOUNDS
     jumpSoundSrc: '../sounds/jump.wav',
     jumpSound: undefined,
     mainSoundSrc: '../sounds/main.mp3',
     mainSound: undefined,
+    springSoundSrc: '../sounds/spring.wav',
+    springSound: undefined,
+    // POWERUPS
+    springPU: [],
     init() {
         // SELECCIONAR CANVAS Y ASOCIAR CONTEXTO
         this.canvasDOM = document.querySelector('#canvas')
@@ -73,11 +76,15 @@ const game = {
 
     drawAll() {
         this.mainBack.draw()
-        this.qbert.draw()
         this.platformsArr.forEach(elem => {
             //console.log(elem)
             elem.draw()
         })
+        this.springPU.forEach(elem => {
+            //console.log(elem)
+            elem.draw()
+        })
+        this.qbert.draw()
     },
     moveAll() {
         this.qbert.move()
@@ -85,26 +92,37 @@ const game = {
             //console.log(elem)
             elem.move()
         })
-        //this.mainSound.play()
+        // this.springPU.forEach(elem => {
+        //     //console.log(elem)
+        //     elem.move()
+        // })
+        this.mainSound.play()
     },
     checkCollision() {
         return this.platformsArr.some((platform) => {
-            return ((this.qbert._playerPos.y + this.qbert._playerSize.height) >= platform._platformPos.y) &&
-                (this.qbert._playerPos.x <= (platform._platformPos.x + platform._platformSize.width)) &&
-                ((this.qbert._playerPos.x + this.qbert._playerSize.width) >= platform._platformPos.x) &&
-                ((this.qbert._playerPos.y + this.qbert._playerSize.height) <= (platform._platformPos.y + platform._platformSize.height)) &&
+            return ((this.qbert._pos.y + this.qbert._size.height) >= platform._pos.y) &&
+                (this.qbert._pos.x <= (platform._pos.x + platform._size.width)) &&
+                ((this.qbert._pos.x + this.qbert._size.width) >= platform._pos.x) &&
+                ((this.qbert._pos.y + this.qbert._size.height) <= (platform._pos.y + platform._size.height)) &&
                 (platform._type != "broken")
         })
     },
-
+    checkPUCollision() {
+        return this.springPU.some((spring) => {
+            return ((this.qbert._pos.y + this.qbert._size.height) >= spring._pos.y) &&
+                (this.qbert._pos.x <= (spring._pos.x + spring._size.width)) &&
+                ((this.qbert._pos.x + this.qbert._size.width) >= spring._pos.x) &&
+                ((this.qbert._pos.y + this.qbert._size.height) <= (spring._pos.y + spring._size.height))
+        })
+    },
     platformGenerator() {
         if (this.platformsArr.length < this.level) {
             let calc = this.gameSize.height / this.level
             let platform, prob, randomSelector
-            let i = this.platformsArr[0]._platformPos.y - calc
+            let i = this.platformsArr[0]._pos.y - calc
             randomSelector = Math.random()
 
-            console.error(randomSelector)
+            console.log(randomSelector)
             if (randomSelector < 0.6) {
                 prob = 1
             } else if (randomSelector < 0.7) {
@@ -116,33 +134,39 @@ const game = {
             switch (prob) {
                 case 1:
                     platform = new GeneralPlatform(this.ctx, this.gameSize, i)
+                    this.platformsArr.unshift(platform)
+                    if (randomSelector < 0.1) {
+                        this.springPU.push(new Spring(this.ctx, this.gameSize, this.platformsArr))
+                    }
                     break;
                 case 2:
                     platform = new BrokenPlatform(this.ctx, this.gameSize, i)
+                    this.platformsArr.unshift(platform)
                     break;
                 case 3:
                     platform = new MovingPlatform(this.ctx, this.gameSize, i)
+                    this.platformsArr.unshift(platform)
                     break;
             }
-            this.platformsArr.unshift(platform)
         }
-
 
         // BORRA LOS QUE SE SALEN DE LA PANTALLA
         this.platformsArr = this.platformsArr.filter(elem => {
-            return elem._platformPos.y <= this.gameSize.height
+            return elem._pos.y <= this.gameSize.height
         })
     },
     goUp() {
         this.platformsArr.forEach(platform => {
-            platform._platformPos.y -= this.qbert._velY
+            return platform._pos.y -= this.qbert._velY
         })
+        this.distanceFromFloor++
 
+        this.springPU.forEach(spring => {
+            return spring._pos.y -= this.qbert._velY
+        })
     },
     setScore() {
-        let distanceTraveled = this.qbert._playerPosOrig.y - this.qbert._playerPos.y
-        if (distanceTraveled)
-            this.score += distanceTraveled
+        this.score = this.distanceFromFloor
         scoreNumber.innerHTML = parseInt(this.score)
     },
     gameOver() {
@@ -164,8 +188,9 @@ const game = {
         this.mainSound = new Sound(this.mainSoundSrc)
         // SONIDO SALTO
         this.jumpSound = new Sound(this.jumpSoundSrc)
+        // SONIDO MUELLE
+        this.springSound = new Sound(this.springSoundSrc)
     }
-
 }
 
 // COLOR FONDO: #012f53
