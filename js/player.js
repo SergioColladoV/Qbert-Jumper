@@ -1,6 +1,6 @@
 // ----- PERSONAJE
 class Player {
-    constructor(ctx, gameSize, mainPlayerSrc, qbertSrcDown, playerSize, velX, velY, gravity, platformsArr, jumpSize) {
+    constructor(ctx, gameSize, mainPlayerSrc, playerSize, velX, velY, gravity, platformsArr, jumpSize) {
         this._ctx = ctx
         this._gameSize = gameSize
 
@@ -14,9 +14,8 @@ class Player {
             height: playerSize.height
         }
         this._playerPos = {
-            // x: this._platformsArr[0],
-            x: this._gameSize.width - this._playerSize.width - 200,
-            y: this._gameSize.height - this._playerSize.height - 200
+            x: this._platformsArr[this._platformsArr.length - 1]._platformPos.x,
+            y: this._platformsArr[this._platformsArr.length - 1]._platformPos.y - this._playerSize.height
         }
         this._playerPosOrig = {
             x: this._gameSize.width / 2 - this._playerSize.width / 2,
@@ -39,10 +38,17 @@ class Player {
         if ((this._playerPos.y + this._playerSize.height) >= this._gameSize.height) {
             game.gameOver()
         }
-        // LA GRAVEDAD 
+        // GRAVEDAD Y DESPLAZAMIENTO DE LA PANTALLA 
         this._velY += this._gravity
+        // SI ESTA SUBIENDO Y ESTA POR ENCIMA DE LA MITAD DE LA PANTALLA
+        // LAS PLATAFORMAS BAJAN IGUAL A LA VELOCIDAD DEL PLAYER
+        // EL PLAYER NO SE MUEVE
+        // -----
+        // SI EL PLAYER NO ESTA POR ENCIMA DE LA PANTALLA 
+        // EL PLAYER SE MUEVE CON SU VELOCIDAD
         if (this._playerPos.y <= this._gameSize.height / 2 && this._velY <= 0) {
             game.goUp()
+
         } else {
             this._playerPos.y += this._velY
         }
@@ -53,40 +59,21 @@ class Player {
             game.qbert._player.src = this._playerUp
         }
         // SI COLISIONA Y ESTA BAJANDO
-        console.log(`VELY ${this._velY}`)
         if (game.checkCollision() && this._velY >= 0) {
-            game.jumpSound.play()
+            //game.jumpSound.play()
             this._playerPosOrig.y = this._playerPos.y
             this._playerPosOrig.x = this._playerPos.x
-            this._velY -= 20
-            console.log(`POS ORIG ${this._playerPosOrig.y}`)
+            this._velY = -15
         }
-
-        // this.ySpeed += gravity;
-        // if (this.y <= screen.height / 2 - 200 && this.ySpeed <= 0) {
-        //     for (var i = 0; i < blocks.length; i++) {
-        //         blocks[i].y -= this.ySpeed;
-        //     }
-        // } else {
-        //     this.y += this.ySpeed;
-        // }
-        // yDistanceTravelled -= this.ySpeed;
     }
-    setListener() {
 
-        console.log("set listener")
-        console.log(this._playerPos.x, this._velX)
+    setListener() {
         // MOVIMIENTO IZQUIERDA DERECHA
         document.onkeydown = (e) => {
             if (e.keyCode === 65) {
                 this._playerPos.x -= this._velX
-                // this._left = true
             } else if (e.keyCode === 68) {
                 this._playerPos.x += this._velX
-                // this._right = true
-            } else {
-                // this._left = false
-                // this._left = false
             }
         }
     }

@@ -21,3 +21,17 @@ main {
 canvas {
     border: 1px solid #e0e0e0
 }
+
+#game-board {
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+#score {
+    position: absolute;
+    top: 20px;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: bold;
+}
