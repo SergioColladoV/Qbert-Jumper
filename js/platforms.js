@@ -9,7 +9,7 @@ class Platforms {
 
         this._platformSize = {
             width: 80,
-            height: 10
+            height: 15
         }
         this._platformPos = {
             x: Math.random() * (this._gameSize.width - this._platformSize.width),

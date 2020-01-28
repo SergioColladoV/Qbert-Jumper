@@ -1,11 +1,13 @@
 // ----- PERSONAJE
 class Player {
-    constructor(ctx, gameSize, mainPlayerSrc, playerSize, velX, velY, gravity, platformsArr, jumpSize) {
+    constructor(ctx, gameSize, mainPlayerSrc, qbertSrcDown, playerSize, velX, velY, gravity, platformsArr, jumpSize) {
         this._ctx = ctx
         this._gameSize = gameSize
 
         this._player = new Image()
         this._player.src = mainPlayerSrc
+        this._playerUp = mainPlayerSrc
+        this._playerDown = '../images/qbert-left-down.png'
         this._platformsArr = platformsArr
         this._playerSize = {
             width: playerSize.width,
@@ -33,12 +35,22 @@ class Player {
     }
 
     move() {
+        //  GAME OVER
+        if ((this._playerPos.y + this._playerSize.height) >= this._gameSize.height) {
+            game.gameOver()
+        }
         // LA GRAVEDAD 
         this._velY += this._gravity
         if (this._playerPos.y <= this._gameSize.height / 2 && this._velY <= 0) {
             game.goUp()
         } else {
             this._playerPos.y += this._velY
+        }
+        // SI ESTA BAJANDO
+        if (this._velY >= 0) {
+            game.qbert._player.src = this._playerDown
+        } else {
+            game.qbert._player.src = this._playerUp
         }
         // SI COLISIONA Y ESTA BAJANDO
         console.log(`VELY ${this._velY}`)

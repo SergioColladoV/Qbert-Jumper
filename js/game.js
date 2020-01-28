@@ -21,12 +21,13 @@ const game = {
     mainBack: undefined,
     // PLAYER GENERAL
     playerSize: {
-        width: 64,
-        height: 60
+        width: 280 * 0.3,
+        height: 300 * 0.3
     },
     jumpSize: 30,
     // PLAYER QBERT
-    qbertSrc: '../images/qbert.png',
+    qbertSrc: '../images/qbert-left.png',
+    qbertSrcDown: '../images/qbert-left-down.png',
     qbert: undefined,
     // PLATFORMS ARRAY
     platformsArr: [],
@@ -53,11 +54,13 @@ const game = {
     start() {
         this.mainSound = new Sound(this.mainSoundSrc)
         this.mainBack = new Background(this.ctx, this.gameSize, this.mainBackSrc, this.velY)
-        this.qbert = new Player(this.ctx, this.gameSize, this.qbertSrc, this.playerSize, this.velX, this.velY, this.gravity, this.platformsArr, this.jumpSize)
+        this.qbert = new Player(this.ctx, this.gameSize, this.qbertSrc, this.qbertSrcDown, this.playerSize, this.velX, this.velY, this.gravity, this.platformsArr, this.jumpSize)
         this.jumpSound = new Sound(this.jumpSoundSrc)
         for (let i = -5000; i < this.gameSize.height; i += (Math.random() * (100 - 50) + 50)) {
             this.platformsArr.push(new Platforms(this.ctx, this.gameSize, this.platformSrc, i))
         }
+        console.log(this.platformsArr)
+        this.mainSound.play()
         let counter = 0
         this.intervalID = setInterval(() => {
             counter > 1000 ? counter = 0 : null
@@ -70,8 +73,8 @@ const game = {
             }
             this.drawAll()
             this.moveAll()
+            this.platformCleaner()
         }, 1000 / this.FPS)
-        this.mainSound.play()
     },
     drawAll() {
         this.mainBack.draw()
@@ -94,14 +97,21 @@ const game = {
                 ((this.qbert._playerPos.y + this.qbert._playerSize.height) <= (platform._platformPos.y + platform._platformSize.height))
         })
     },
+    platformCleaner() {
+        if (this.platformsArr[this.platformsArr.length - 1]._platformPos.y >= this.gameSize.height) {
+            this.platformsArr.pop()
+        }
+    },
     goUp() {
         console.log("GO UPPP")
         this.platformsArr.forEach(platform => {
             platform._platformPos.y -= this.qbert._velY
         })
-        // for (let i = 0; i < this.gameSize.height / 2; i += (Math.random() * (this.gameSize.height / 2))) {
-        //     this.platformsArr.push(new Platforms(this.ctx, this.gameSize, this.platformSrc, i))
-        // }
+
+    },
+    gameOver() {
+        alert("Game Over")
+        clearInterval(intervalID)
     }
 }
 
