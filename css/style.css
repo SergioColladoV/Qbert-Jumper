@@ -4,7 +4,9 @@
 }
 
 body {
-    font-family: sans-serif;
+    background-color: #012f53;
+    font-family: 'Press Start 2P',
+        cursive;
     width: 100%;
     height: 100vh;
 }
@@ -18,9 +20,7 @@ main {
     align-items: flex-start;
 }
 
-canvas {
-    border: 1px solid #e0e0e0
-}
+canvas {}
 
 #game-board {
     position: relative;
@@ -29,9 +29,39 @@ canvas {
 }
 
 #score {
+    opacity: 0;
     position: absolute;
     top: 20px;
     color: #fff;
     text-transform: uppercase;
     font-weight: bold;
+}
+
+.intro-image {
+    margin-right: 50px;
+}
+
+.container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#startGame {
+    position: absolute;
+
+    top: 300px;
+}
+
+button {
+    background-color: transparent;
+    border: 2px dashed red;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 20px;
+    color: red;
+    width: 200px;
+    padding: 20px;
 }

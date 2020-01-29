@@ -1,6 +1,6 @@
 // ----- BACKGROUND
 class Background {
-    constructor(ctx, gameSize, mainBackSrc, velY) {
+    constructor(ctx, gameSize, mainBackSrc) {
         this._ctx = ctx
         this._gameSize = gameSize
         this._mainBack = new Image()
@@ -9,16 +9,8 @@ class Background {
             x: 0,
             y: 0
         }
-        this._velY = velY
     }
     draw() {
         this._ctx.drawImage(this._mainBack, this._mainBackPos.x, this._mainBackPos.y, this._gameSize.width, this._gameSize.height);
-        this._ctx.drawImage(this._mainBack, this._mainBackPos.x, this._mainBackPos.y - this._gameSize.height, this._gameSize.width, this._gameSize.height);
-    }
-    move() {
-        this._mainBackPos.y += this._velY
-        if (this._mainBackPos.y >= this._gameSize.height) {
-            this._mainBackPos.y = 0
-        }
     }
 }

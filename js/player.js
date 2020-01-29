@@ -1,6 +1,6 @@
 // ----- PERSONAJE
 class Player {
-    constructor(ctx, gameSize, mainPlayerSrc, playerSize, velX, velY, gravity, platformsArr, jumpSize) {
+    constructor(ctx, gameSize, mainPlayerSrc, playerSize, velX, velY, gravity, platformsArr) {
         this._ctx = ctx
         this._gameSize = gameSize
 
@@ -24,7 +24,6 @@ class Player {
         this._velX = velX
         this._velY = velY
         this._gravity = gravity
-        this._jumpSize = jumpSize
         this._left = false
         this._right = false
         this.setListener()
@@ -35,9 +34,11 @@ class Player {
 
     move() {
         //  GAME OVER
-        if ((this._pos.y + this._size.height) >= this._gameSize.height) {
+        if ((this._pos.y + this._size.height) >= this._gameSize.height || game.checkEnemyCollision()) {
             game.gameOver()
         }
+        // FIRE MODE
+        game.checkCollision(game.flames) ? game.fireMode() : null
         // GRAVEDAD Y DESPLAZAMIENTO DE LA PANTALLA 
         this._velY += this._gravity
         // SI ESTA SUBIENDO Y ESTA POR ENCIMA DE LA MITAD DE LA PANTALLA
@@ -59,26 +60,41 @@ class Player {
             game.qbert._player.src = this._playerUp
         }
         // SI COLISIONA Y ESTA BAJANDO
-        if (game.checkPUCollision() && this._velY >= 0) {
+        if (game.checkCollision(game.effects) && this._velY >= 0) {
             game.springSound.play()
             this._posOrig.y = this._pos.y
             this._posOrig.x = this._pos.x
             this._velY = -25
-        } else if (game.checkCollision() && this._velY >= 0) {
+        } else if (game.fireModeEnabled && this._velY >= 0) {
+            game.springSound.play()
+            this._gravity = 0
+            this._posOrig.y = this._pos.y
+            this._posOrig.x = this._pos.x
+            this._velY = -25
+        } else if (game.checkCollision(game.platformsArr) && this._velY >= 0) {
             game.jumpSound.play()
             this._posOrig.y = this._pos.y
             this._posOrig.x = this._pos.x
             this._velY = -15
         }
     }
-
+    shoot() {
+        game.shootSound.play()
+        game.bullets.push(new Bullet(this._ctx, this._pos))
+    }
     setListener() {
         // MOVIMIENTO IZQUIERDA DERECHA
         document.onkeydown = (e) => {
-            if (e.keyCode === 65) {
-                this._pos.x -= this._velX
-            } else if (e.keyCode === 68) {
-                this._pos.x += this._velX
+            switch (e.code) {
+                case 'KeyD':
+                    this._pos.x += this._velX
+                    break;
+                case 'KeyA':
+                    this._pos.x -= this._velX
+                    break;
+                case 'KeyW':
+                    this.shoot()
+                    break;
             }
         }
     }
