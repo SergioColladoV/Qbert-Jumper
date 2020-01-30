@@ -4,18 +4,29 @@ class Player {
         this._ctx = ctx
         this._gameSize = gameSize
 
+        // this._player = new Image()
+        // this._player.src = mainPlayerSrc
+        // this._playerUp = mainPlayerSrc
+        // this._playerDown = '../images/qbert-left-down.png'
+
         this._player = new Image()
-        this._player.src = mainPlayerSrc
-        this._playerUp = mainPlayerSrc
-        this._playerDown = '../images/qbert-left-down.png'
+        this._player.src = "../images/qbertspr-left.png"
+        // FRAMES
+        this._player.frames = 2 // TIENE DOS FRAMES
+        this._player.framesIndex = 0 // EMPIEZA EN EL 0
+
         // PLATAFORMAS EN EL JUEGO
         this._platformsArr = platformsArr
         // GRAVEDAD DEL JUEGO
         this._gravity = gravity
         // TAMANO DEL PLAYER
+        // this._size = {
+        //     width: playerSize.width,
+        //     height: playerSize.height
+        // }
         this._size = {
-            width: playerSize.width,
-            height: playerSize.height
+            width: 280 * 0.3,
+            height: 300 * 0.3
         }
         // POSICION DEL PLAYER (INICIAL EN LA PLATAFORMA)
         this._pos = {
@@ -35,8 +46,22 @@ class Player {
     }
 
     // DIBUJA EL PLAYER
-    draw() {
-        this._ctx.drawImage(this._player, this._pos.x, this._pos.y, this._size.width, this._size.height);
+    // draw() {
+    //     this._ctx.drawImage(this._player, this._pos.x, this._pos.y, this._size.width, this._size.height);
+    // }
+
+    draw(framesCounter) {
+        this._ctx.drawImage(
+            this._player,
+            this._player.framesIndex * Math.floor(this._player.width / this._player.frames),
+            0,
+            Math.floor(this._player.width / this._player.frames),
+            300,
+            this._pos.x,
+            this._pos.y,
+            this._size.width,
+            this._size.height
+        );
     }
     move() {
         // GRAVEDAD Y DESPLAZAMIENTO DE LA PANTALLA 
@@ -55,10 +80,12 @@ class Player {
 
         // SI ESTA BAJANDO -> IMAGEN BAJANDO
         if (this._velY >= 0) {
-            game.qbert._player.src = this._playerDown
+            // game.qbert._player.src = this._playerDown
+            this._player.framesIndex = 1
             //  SI ESTA SUBIENDO -> IMAGEN SUBINEDO
         } else {
-            game.qbert._player.src = this._playerUp
+            // game.qbert._player.src = this._playerUp
+            this._player.framesIndex = 0
         }
     }
     shoot() {
@@ -72,9 +99,11 @@ class Player {
         document.onkeydown = (e) => {
             switch (e.code) {
                 case 'KeyD':
+                    this._player.src = '../images/qbertspr-right.png'
                     this._pos.x += this._velX
                     break;
                 case 'KeyA':
+                    this._player.src = '../images/qbertspr-left.png'
                     this._pos.x -= this._velX
                     break;
                 case 'KeyW':

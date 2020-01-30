@@ -70,8 +70,8 @@ const game = {
         this.canvasDOM.height = this.gameSize.height
     },
     setInitialState() {
-        // // SHOW SCORE
-        // score.style.opacity = 1
+        // SHOW SCORE
+        score.style.opacity = 1
         // FONDO
         this.mainBack = new Background(this.ctx, this.gameSize, this.mainBackSrc)
         // PRIMERAS PLATAFORMAS
