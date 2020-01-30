@@ -29,14 +29,40 @@ class GeneralPlatform {
 class BrokenPlatform extends GeneralPlatform {
     constructor(ctx, gameSize, i) {
         super(ctx, gameSize, i)
+        // // IMAGEN
+        // this._platform = new Image()
+        // this._platform.src = '../images/broken-platform.png'
+
         // IMAGEN
         this._platform = new Image()
-        this._platform.src = '../images/broken-platform.png'
+        this._platform.src = "../images/broken-platform-spr.png"
+        // FRAMES
+        this._platform.frames = 2 // TIENE DOS FRAMES
+        this._platform.framesIndex = 0 // EMPIEZA EN EL 0
+
+        // TAMANO
+        this._size = {
+            width: 100,
+            height: 30
+        }
         // TIPO DE PLATAFORMA
         this._type = 'broken'
     }
     draw() {
-        this._ctx.drawImage(this._platform, this._pos.x, this._pos.y, this._size.width, this._size.height);
+        this._ctx.drawImage(
+            this._platform,
+            this._platform.framesIndex * Math.floor(this._platform.width / this._platform.frames),
+            0,
+            Math.floor(this._platform.width / this._platform.frames),
+            30,
+            this._pos.x,
+            this._pos.y,
+            this._size.width,
+            this._size.height
+        )
+    }
+    broke() {
+        this._platform.framesIndex = 1
     }
 }
 

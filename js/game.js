@@ -17,6 +17,7 @@ const game = {
     level: 10,
     distanceFromFloor: 0,
     score: 0,
+    velX: 10,
     // BACKGROUND PROPERTIES
     mainBackSrc: '../images/background.jpg',
     mainBack: undefined,
@@ -26,8 +27,6 @@ const game = {
         height: 300 * 0.3
     },
     // PLAYER QBERT
-    qbertSrc: '../images/qbert-left.png',
-    qbertSrcDown: '../images/qbert-left-down.png',
     qbert: undefined,
     // PLATFORMS ARRAY
     platformsArr: [],
@@ -56,6 +55,7 @@ const game = {
     flames: [],
     enemies: [],
     bullets: [],
+    lastGamma: 0,
     init() {
         // SELECCIONAR CANVAS Y ASOCIAR CONTEXTO
         this.canvasDOM = document.querySelector('#canvas')
@@ -81,7 +81,7 @@ const game = {
             this.platformsArr.push(platform)
         }
         // PLAYER
-        this.qbert = new Player(this.ctx, this.gameSize, this.qbertSrc, this.playerSize, this.gravity, this.platformsArr)
+        this.qbert = new Player(this.ctx, this.gameSize, this.gravity, this.platformsArr, this.velX)
         // MUSICA PRINCIPAL
         this.mainSound = new Sound(this.mainSoundSrc)
         this.mainSound.play()
@@ -109,6 +109,7 @@ const game = {
             this.checkBulletCollision()
             this.fireMode()
             this.setScore()
+            this.madness()
             this.gameOver()
         }, 1000 / this.FPS)
     },
@@ -124,7 +125,7 @@ const game = {
                 prob = 1
             } else if (randomSelector < 0.7) {
                 prob = 2
-            } else if (randomSelector < 1) {
+            } else if (randomSelector < 0.9) {
                 prob = 3
             }
 
@@ -132,7 +133,7 @@ const game = {
                 case 1:
                     platform = new GeneralPlatform(this.ctx, this.gameSize, i)
                     this.platformsArr.unshift(platform)
-                    if (randomSelector < 0.05) {
+                    if (randomSelector < 0.04) {
                         this.enemies.push(new Donkey(this.ctx, this.gameSize, this.platformsArr))
                         this.enemyappear = new Sound(this.enemyappearSrc)
                         this.enemyappear.play()
@@ -233,11 +234,20 @@ const game = {
     },
     checkCollision(elem) {
         return elem.some((object) => {
-            return ((this.qbert._pos.y + this.qbert._size.height) >= object._pos.y) &&
+            if (((this.qbert._pos.y + this.qbert._size.height) >= object._pos.y) &&
                 (this.qbert._pos.x <= (object._pos.x + object._size.width)) &&
                 ((this.qbert._pos.x + this.qbert._size.width) >= object._pos.x) &&
                 ((this.qbert._pos.y + this.qbert._size.height) <= (object._pos.y + object._size.height)) &&
-                (object._type != "broken")
+                (object._type != "broken")) {
+                return true
+            } else if (((this.qbert._pos.y + this.qbert._size.height) >= object._pos.y) &&
+                (this.qbert._pos.x <= (object._pos.x + object._size.width)) &&
+                ((this.qbert._pos.x + this.qbert._size.width) >= object._pos.x) &&
+                ((this.qbert._pos.y + this.qbert._size.height) <= (object._pos.y + object._size.height)) &&
+                (object._type == "broken") && this.qbert._velY >= 0) {
+                object.broke()
+                return false
+            }
         })
     },
     checkEnemyCollision() {
@@ -261,7 +271,7 @@ const game = {
                         setTimeout(() => {
                             this.invencible = false
                         }, 1000);
-                        enemy._pos.y += 50
+                        enemy._pos.y += 20
                     }
                 })
             })
@@ -270,8 +280,10 @@ const game = {
     fireMode() {
         if (this.checkCollision(this.flames)) {
             setTimeout(() => {
-                this.fireModeEnabled = false
                 this.invencible = false
+            }, 10000)
+            setTimeout(() => {
+                this.fireModeEnabled = false
                 this.mainBackSrc = '../images/background.jpg'
                 this.mainBack = new Background(this.ctx, this.gameSize, this.mainBackSrc)
                 this.firemodeSound.stop()
@@ -321,6 +333,18 @@ const game = {
         this.flames.forEach(enemy => {
             return enemy._pos.y -= this.qbert._velY
         })
+    },
+    madness() {
+        window.addEventListener('deviceorientation', (event) => {
+            let gamma = event.gamma
+            console.log(gamma)
+            if (gamma < game.lastGamma) {
+                game.qbert._pos.x -= 10
+            } else if (gamma > game.lastGamma) {
+                game.qbert._pos.x += 10
+            }
+            game.lastGamma = gamma
+        });
     }
 }
 

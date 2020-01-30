@@ -1,14 +1,9 @@
 // ----- PERSONAJE
 class Player {
-    constructor(ctx, gameSize, mainPlayerSrc, playerSize, gravity, platformsArr) {
+    constructor(ctx, gameSize, gravity, platformsArr, velX) {
         this._ctx = ctx
         this._gameSize = gameSize
-
-        // this._player = new Image()
-        // this._player.src = mainPlayerSrc
-        // this._playerUp = mainPlayerSrc
-        // this._playerDown = '../images/qbert-left-down.png'
-
+        // IMAGEN DEL PLAYER
         this._player = new Image()
         this._player.src = "../images/qbertspr-left.png"
         // FRAMES
@@ -20,10 +15,6 @@ class Player {
         // GRAVEDAD DEL JUEGO
         this._gravity = gravity
         // TAMANO DEL PLAYER
-        // this._size = {
-        //     width: playerSize.width,
-        //     height: playerSize.height
-        // }
         this._size = {
             width: 280 * 0.3,
             height: 300 * 0.3
@@ -39,18 +30,14 @@ class Player {
             y: this._gameSize.height - this._size.height - 200
         }
         // VELOCIDADES DEL PLAYER HORIZONTAL Y VERTICAL
-        this._velX = 10
+        this._velX = velX
         this._velY = 0
         // LISTENER PARA LAS TECLAS
         this.setListener()
     }
 
     // DIBUJA EL PLAYER
-    // draw() {
-    //     this._ctx.drawImage(this._player, this._pos.x, this._pos.y, this._size.width, this._size.height);
-    // }
-
-    draw(framesCounter) {
+    draw() {
         this._ctx.drawImage(
             this._player,
             this._player.framesIndex * Math.floor(this._player.width / this._player.frames),
