@@ -3,48 +3,50 @@ class GeneralPlatform {
     constructor(ctx, gameSize, i) {
         this._ctx = ctx
         this._gameSize = gameSize
-
+        // TAMANO
         this._size = {
             width: 100,
             height: 15
         }
+        // POSICION
         this._pos = {
             x: Math.random() * (this._gameSize.width - this._size.width),
             y: i
         }
+        // TIPO DE PLATAFORMA
         this._type = 'general'
     }
-
     draw() {
         this._ctx.fillStyle = '#FFFF00'
         this._ctx.fillRect(this._pos.x, this._pos.y, this._size.width, this._size.height);
     }
-    move() {}
+    move() {
+
+    }
 }
 
-// ROTA
+// CLASE PARA PLATAFORMAS ROTAS
 class BrokenPlatform extends GeneralPlatform {
     constructor(ctx, gameSize, i) {
         super(ctx, gameSize, i)
-
+        // IMAGEN
         this._platform = new Image()
         this._platform.src = '../images/broken-platform.png'
-
+        // TIPO DE PLATAFORMA
         this._type = 'broken'
     }
     draw() {
         this._ctx.drawImage(this._platform, this._pos.x, this._pos.y, this._size.width, this._size.height);
     }
-    move() {}
 }
 
-// 
-// ROTA
+// CLASE PARA PLATAFORMAS QUE SE MUEVEN
 class MovingPlatform extends GeneralPlatform {
     constructor(ctx, gameSize, i) {
         super(ctx, gameSize, i)
-
+        // TIPO DE PLATAFORMA
         this._type = 'moving'
+        // VELOCIDAD DE MOVIMIENTO HORIZONTAL
         this._vel = 5
     }
     draw() {

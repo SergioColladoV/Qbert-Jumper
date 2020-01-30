@@ -1,6 +1,6 @@
 // ----- PERSONAJE
 class Player {
-    constructor(ctx, gameSize, mainPlayerSrc, playerSize, velX, velY, gravity, platformsArr) {
+    constructor(ctx, gameSize, mainPlayerSrc, playerSize, gravity, platformsArr) {
         this._ctx = ctx
         this._gameSize = gameSize
 
@@ -8,37 +8,37 @@ class Player {
         this._player.src = mainPlayerSrc
         this._playerUp = mainPlayerSrc
         this._playerDown = '../images/qbert-left-down.png'
+        // PLATAFORMAS EN EL JUEGO
         this._platformsArr = platformsArr
+        // GRAVEDAD DEL JUEGO
+        this._gravity = gravity
+        // TAMANO DEL PLAYER
         this._size = {
             width: playerSize.width,
             height: playerSize.height
         }
+        // POSICION DEL PLAYER (INICIAL EN LA PLATAFORMA)
         this._pos = {
             x: this._platformsArr[this._platformsArr.length - 1]._pos.x,
             y: this._platformsArr[this._platformsArr.length - 1]._pos.y - this._size.height
         }
+        // ULTIMA POSICION ANTES DE SALTAR
         this._posOrig = {
             x: this._gameSize.width / 2 - this._size.width / 2,
             y: this._gameSize.height - this._size.height - 200
         }
-        this._velX = velX
-        this._velY = velY
-        this._gravity = gravity
-        this._left = false
-        this._right = false
+        // VELOCIDADES DEL PLAYER HORIZONTAL Y VERTICAL
+        this._velX = 10
+        this._velY = 0
+        // LISTENER PARA LAS TECLAS
         this.setListener()
     }
+
+    // DIBUJA EL PLAYER
     draw() {
         this._ctx.drawImage(this._player, this._pos.x, this._pos.y, this._size.width, this._size.height);
     }
-
     move() {
-        //  GAME OVER
-        if ((this._pos.y + this._size.height) >= this._gameSize.height || game.checkEnemyCollision()) {
-            game.gameOver()
-        }
-        // FIRE MODE
-        game.checkCollision(game.flames) ? game.fireMode() : null
         // GRAVEDAD Y DESPLAZAMIENTO DE LA PANTALLA 
         this._velY += this._gravity
         // SI ESTA SUBIENDO Y ESTA POR ENCIMA DE LA MITAD DE LA PANTALLA
@@ -49,37 +49,22 @@ class Player {
         // EL PLAYER SE MUEVE CON SU VELOCIDAD
         if (this._pos.y <= this._gameSize.height / 2 && this._velY <= 0) {
             game.goUp()
-
         } else {
             this._pos.y += this._velY
         }
-        // SI ESTA BAJANDO
+
+        // SI ESTA BAJANDO -> IMAGEN BAJANDO
         if (this._velY >= 0) {
             game.qbert._player.src = this._playerDown
+            //  SI ESTA SUBIENDO -> IMAGEN SUBINEDO
         } else {
             game.qbert._player.src = this._playerUp
         }
-        // SI COLISIONA Y ESTA BAJANDO
-        if (game.checkCollision(game.effects) && this._velY >= 0) {
-            game.springSound.play()
-            this._posOrig.y = this._pos.y
-            this._posOrig.x = this._pos.x
-            this._velY = -25
-        } else if (game.fireModeEnabled && this._velY >= 0) {
-            game.springSound.play()
-            this._gravity = 0
-            this._posOrig.y = this._pos.y
-            this._posOrig.x = this._pos.x
-            this._velY = -25
-        } else if (game.checkCollision(game.platformsArr) && this._velY >= 0) {
-            game.jumpSound.play()
-            this._posOrig.y = this._pos.y
-            this._posOrig.x = this._pos.x
-            this._velY = -15
-        }
     }
     shoot() {
+        // REPRODUCE EL SONIDO DISPARO
         game.shootSound.play()
+        // CREA BALAS
         game.bullets.push(new Bullet(this._ctx, this._pos))
     }
     setListener() {
