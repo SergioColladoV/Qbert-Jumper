@@ -5,7 +5,7 @@ class Player {
         this._gameSize = gameSize
         // IMAGEN DEL PLAYER
         this._player = new Image()
-        this._player.src = "../images/qbertspr-left.png"
+        this._player.src = "/images/qbertspr-left.png"
         // FRAMES
         this._player.frames = 2 // TIENE DOS FRAMES
         this._player.framesIndex = 0 // EMPIEZA EN EL 0
@@ -59,25 +59,18 @@ class Player {
         // -----
         // SI EL PLAYER NO ESTA POR ENCIMA DE LA PANTALLA 
         // EL PLAYER SE MUEVE CON SU VELOCIDAD
-        if (this._pos.y <= this._gameSize.height / 2 && this._velY <= 0) {
-            game.goUp()
-        } else {
-            this._pos.y += this._velY
-        }
+        this._pos.y <= this._gameSize.height / 2 && this._velY <= 0 ? game.goUp() : this._pos.y += this._velY
 
-        // SI ESTA BAJANDO -> IMAGEN BAJANDO
-        if (this._velY >= 0) {
-            // game.qbert._player.src = this._playerDown
-            this._player.framesIndex = 1
-            //  SI ESTA SUBIENDO -> IMAGEN SUBINEDO
-        } else {
-            // game.qbert._player.src = this._playerUp
-            this._player.framesIndex = 0
-        }
+        // SI ESTA BAJANDO -> IMAGEN BAJANDO | SI ESTA SUBIENDO -> IMAGEN SUBINEDO
+        this._velY >= 0 ? this._player.framesIndex = 1 : this._player.framesIndex = 0
+
+        // MOVIMIENTO INFINITO HORIZONTAL
+        this._pos.x + this._size.width < 0 ? this._pos.x = this._gameSize.width : this._pos.x > this._gameSize.width ? this._pos.x = 0 - this._size.width : null
     }
     shoot() {
         // REPRODUCE EL SONIDO DISPARO
         game.shootSound.play()
+
         // CREA BALAS
         game.bullets.push(new Bullet(this._ctx, this._pos))
     }
@@ -86,11 +79,11 @@ class Player {
         document.onkeydown = (e) => {
             switch (e.code) {
                 case 'KeyD':
-                    this._player.src = '../images/qbertspr-right.png'
+                    this._player.src = '/images/qbertspr-right.png'
                     this._pos.x += this._velX
                     break;
                 case 'KeyA':
-                    this._player.src = '../images/qbertspr-left.png'
+                    this._player.src = '/images/qbertspr-left.png'
                     this._pos.x -= this._velX
                     break;
                 case 'KeyW':

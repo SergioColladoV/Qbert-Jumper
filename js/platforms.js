@@ -29,13 +29,9 @@ class GeneralPlatform {
 class BrokenPlatform extends GeneralPlatform {
     constructor(ctx, gameSize, i) {
         super(ctx, gameSize, i)
-        // // IMAGEN
-        // this._platform = new Image()
-        // this._platform.src = '../images/broken-platform.png'
-
         // IMAGEN
         this._platform = new Image()
-        this._platform.src = "../images/broken-platform-spr.png"
+        this._platform.src = "/images/broken-platform-spr.png"
         // FRAMES
         this._platform.frames = 2 // TIENE DOS FRAMES
         this._platform.framesIndex = 0 // EMPIEZA EN EL 0
@@ -81,11 +77,7 @@ class MovingPlatform extends GeneralPlatform {
     }
     move() {
         this._pos.x -= this._vel
-        if (this._pos.x >= 0) {
-            this._vel *= -1
-        }
-        if (this._pos.x + this._size.width <= this._gameSize.width) {
-            this._vel *= -1
-        }
+        this._pos.x >= 0 ? this._vel *= -1 : null
+        this._pos.x + this._size.width <= this._gameSize.width ? this._vel *= -1 : null
     }
 }

@@ -19,7 +19,7 @@ const game = {
     score: 0,
     velX: 10,
     // BACKGROUND PROPERTIES
-    mainBackSrc: '../images/background.jpg',
+    mainBackSrc: '/images/background.jpg',
     mainBack: undefined,
     // PLAYER GENERAL
     playerSize: {
@@ -31,22 +31,26 @@ const game = {
     // PLATFORMS ARRAY
     platformsArr: [],
     // SOUNDS
-    jumpSoundSrc: '../sounds/jump.wav',
+    jumpSoundSrc: '/sounds/jump.wav',
     jumpSound: undefined,
-    mainSoundSrc: '../sounds/main.mp3',
+    mainSoundSrc: '/sounds/main.mp3',
     mainSound: undefined,
-    springSoundSrc: '../sounds/spring.wav',
+    springSoundSrc: '/sounds/spring.wav',
     springSound: undefined,
-    shootSoundSrc: '../sounds/laser.mp3',
+    shootSoundSrc: '/sounds/laser.mp3',
     shootSound: undefined,
-    firemodeSoundSrc: '../sounds/fireMode.mp3',
+    firemodeSoundSrc: '/sounds/fireMode.mp3',
     firemodeSound: undefined,
-    gameoverSoundSrc: '../sounds/gameover.wav',
+    gameoverSoundSrc: '/sounds/gameover.wav',
     gameoverSound: undefined,
-    enemyappearSrc: '../sounds/enemyappear.wav',
+    enemyappearSrc: '/sounds/enemyappear.wav',
     enemyappear: undefined,
-    enemydeathSoundSrc: '../sounds/enemydeath.wav',
+    enemydeathSoundSrc: '/sounds/enemydeath.wav',
     enemydeathSound: undefined,
+    winSoundSrc: '/sounds/win.wav',
+    winSound: undefined,
+    brokeSoundSrc: '/sounds/broke.wav',
+    brokeSound: undefined,
     // FIRE MODE
     fireModeEnabled: false,
     invencible: false,
@@ -55,6 +59,7 @@ const game = {
     flames: [],
     enemies: [],
     bullets: [],
+    // MOBILE
     lastGamma: 0,
     init() {
         // SELECCIONAR CANVAS Y ASOCIAR CONTEXTO
@@ -109,7 +114,9 @@ const game = {
             this.checkBulletCollision()
             this.fireMode()
             this.setScore()
-            this.madness()
+            counter % 30 == 0 ? this.mobile() : null
+            // this.mobile()
+            this.win()
             this.gameOver()
         }, 1000 / this.FPS)
     },
@@ -119,16 +126,9 @@ const game = {
             let platform, prob, randomSelector
             let i = this.platformsArr[0]._pos.y - calc
             randomSelector = Math.random()
-
-            console.log(randomSelector)
-            if (randomSelector < 0.6) {
-                prob = 1
-            } else if (randomSelector < 0.7) {
-                prob = 2
-            } else if (randomSelector < 0.9) {
-                prob = 3
-            }
-
+            // SEGUN RANDOM INICIALIAZA UNA VARIABLE PRO QUE SE USARA EN EL SWITCH
+            randomSelector < 0.6 ? prob = 1 : randomSelector < 0.7 ? prob = 2 : randomSelector < 0.9 ? prob = 3 : null
+            // SWITCH PARA GENERAR DIFERENTES TIPOS DE PLATAFORMAS, ENEMIGOS Y EFECTOS
             switch (prob) {
                 case 1:
                     platform = new GeneralPlatform(this.ctx, this.gameSize, i)
@@ -144,14 +144,12 @@ const game = {
                     }
                     break;
                 case 2:
+                    // CONTADOR PARA QUE SOLAMENTE SE GENERE UNA PLATAFORMA ROTA A LA VEZ
                     let brokenCounter = 0
                     this.platformsArr.forEach(platform => {
                         platform._type === 'broken' ? brokenCounter++ : null
                     })
-                    if (brokenCounter === 0) {
-                        platform = new BrokenPlatform(this.ctx, this.gameSize, i)
-                        this.platformsArr.unshift(platform)
-                    }
+                    brokenCounter === 0 ? (platform = new BrokenPlatform(this.ctx, this.gameSize, i), this.platformsArr.unshift(platform)) : null
                     break;
                 case 3:
                     platform = new MovingPlatform(this.ctx, this.gameSize, i)
@@ -245,6 +243,8 @@ const game = {
                 ((this.qbert._pos.x + this.qbert._size.width) >= object._pos.x) &&
                 ((this.qbert._pos.y + this.qbert._size.height) <= (object._pos.y + object._size.height)) &&
                 (object._type == "broken") && this.qbert._velY >= 0) {
+                this.brokeSound = new Sound(this.brokeSoundSrc)
+                this.brokeSound.play()
                 object.broke()
                 return false
             }
@@ -259,23 +259,21 @@ const game = {
         })
     },
     checkBulletCollision() {
-        if (this.enemies.length !== 0) {
-            this.bullets.forEach(bullet => {
-                this.enemies.forEach((enemy, idx) => {
-                    if ((bullet._pos.y <= enemy._pos.y + enemy._size.height) &&
-                        (bullet._pos.x <= enemy._pos.x + enemy._size.width) &&
-                        (bullet._pos.x + bullet._size.width >= enemy._pos.x)) {
-                        this.enemydeathSound = new Sound(this.enemydeathSoundSrc)
-                        this.enemydeathSound.play()
-                        this.invencible = true
-                        setTimeout(() => {
-                            this.invencible = false
-                        }, 1000);
-                        enemy._pos.y += 20
-                    }
-                })
+        (this.enemies.length !== 0) ? this.bullets.forEach(bullet => {
+            this.enemies.forEach((enemy) => {
+                if ((bullet._pos.y <= enemy._pos.y + enemy._size.height) &&
+                    (bullet._pos.x <= enemy._pos.x + enemy._size.width) &&
+                    (bullet._pos.x + bullet._size.width >= enemy._pos.x)) {
+                    this.enemydeathSound = new Sound(this.enemydeathSoundSrc)
+                    this.enemydeathSound.play()
+                    this.invencible = true
+                    setTimeout(() => {
+                        this.invencible = false
+                    }, 1000);
+                    enemy._pos.y += 100
+                }
             })
-        }
+        }): null
     },
     fireMode() {
         if (this.checkCollision(this.flames)) {
@@ -284,7 +282,7 @@ const game = {
             }, 10000)
             setTimeout(() => {
                 this.fireModeEnabled = false
-                this.mainBackSrc = '../images/background.jpg'
+                this.mainBackSrc = '/images/background.jpg'
                 this.mainBack = new Background(this.ctx, this.gameSize, this.mainBackSrc)
                 this.firemodeSound.stop()
                 this.mainSound.play()
@@ -293,7 +291,7 @@ const game = {
             this.fireModeEnabled = true
             this.invencible = true
             this.flames = []
-            this.mainBackSrc = '../images/back-flames.png'
+            this.mainBackSrc = '/images/back-flames.png'
             this.mainBack = new Background(this.ctx, this.gameSize, this.mainBackSrc)
             this.mainSound.stop()
             // SONIDO FIRE MODE
@@ -305,12 +303,26 @@ const game = {
         this.score = this.distanceFromFloor
         scoreNumber.innerHTML = parseInt(this.score)
     },
+    win() {
+        if (this.score >= 500) {
+            this.mainBackSrc = '/images/win.png'
+            this.mainBack = new Background(this.ctx, this.gameSize, this.mainBackSrc)
+            this.firemodeSound.stop()
+            this.mainSound.stop()
+            this.winSound = new Sound(this.winSoundSrc)
+            this.winSound.play()
+            setTimeout(() => {
+                this.mainBack.draw()
+            }, 100)
+            clearInterval(this.intervalID)
+        }
+    },
     gameOver() {
         if ((!this.invencible && this.checkEnemyCollision()) || (this.qbert._pos.y + this.qbert._size.height) >= this.gameSize.height) {
             this.mainSound.stop()
             this.gameoverSound = new Sound(this.gameoverSoundSrc)
             this.gameoverSound.play()
-            this.mainBackSrc = '../images/gameover.png'
+            this.mainBackSrc = '/images/gameover.png'
             this.mainBack = new Background(this.ctx, this.gameSize, this.mainBackSrc)
             setTimeout(() => {
                 this.mainBack.draw()
@@ -334,16 +346,12 @@ const game = {
             return enemy._pos.y -= this.qbert._velY
         })
     },
-    madness() {
+    mobile() {
         window.addEventListener('deviceorientation', (event) => {
             let gamma = event.gamma
             console.log(gamma)
-            if (gamma < game.lastGamma) {
-                game.qbert._pos.x -= 10
-            } else if (gamma > game.lastGamma) {
-                game.qbert._pos.x += 10
-            }
-            game.lastGamma = gamma
+            gamma < game.lastGamma ? this.qbert._pos.x -= 10 : gamma > this.lastGamma ? this.qbert._pos.x += 10 : null
+            this.lastGamma = gamma
         });
     }
 }
