@@ -1,4 +1,2 @@
 let coins = 0
-startGame.onclick = () => {
-    game.init()
-}
+startGame.onclick = () => game.init()

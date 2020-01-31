@@ -160,46 +160,24 @@ const game = {
     },
     cleanAll() {
         // BORRA LOS QUE SE SALEN DE LA PANTALLA
-        this.platformsArr = this.platformsArr.filter(elem => {
-            return elem._pos.y <= this.gameSize.height
-        })
-        this.effects = this.effects.filter(elem => {
-            return elem._pos.y <= this.gameSize.height
-        })
-        this.enemies = this.enemies.filter(elem => {
-            return elem._pos.y <= this.gameSize.height
-        })
-        this.bullets = this.bullets.filter(elem => {
-            return elem._pos.y >= 0
-        })
+        this.platformsArr = this.platformsArr.filter(elem => elem._pos.y <= this.gameSize.height)
+        this.effects = this.effects.filter(elem => elem._pos.y <= this.gameSize.height)
+        this.enemies = this.enemies.filter(elem => elem._pos.y <= this.gameSize.height)
+        this.bullets = this.bullets.filter(elem => elem._pos.y >= 0)
     },
     drawAll() {
         this.mainBack.draw()
-        this.platformsArr.forEach(elem => {
-            elem.draw()
-        })
-        this.effects.forEach(elem => {
-            elem.draw()
-        })
-        this.enemies.forEach(elem => {
-            elem.draw()
-        })
-        this.flames.forEach(elem => {
-            elem.draw()
-        })
-        this.bullets.forEach(elem => {
-            elem.draw()
-        })
+        this.platformsArr.forEach(elem => elem.draw())
+        this.effects.forEach(elem => elem.draw())
+        this.enemies.forEach(elem => elem.draw())
+        this.flames.forEach(elem => elem.draw())
+        this.bullets.forEach(elem => elem.draw())
         this.qbert.draw()
     },
     moveAll() {
         this.qbert.move()
-        this.platformsArr.forEach(elem => {
-            elem.move()
-        })
-        this.bullets.forEach(elem => {
-            elem.move()
-        })
+        this.platformsArr.forEach(elem => elem.move())
+        this.bullets.forEach(elem => elem.move())
     },
     playerBehavior() {
         // SI COLISIONA CON MUELLE Y ESTA BAJANDO
@@ -267,9 +245,7 @@ const game = {
                     this.enemydeathSound = new Sound(this.enemydeathSoundSrc)
                     this.enemydeathSound.play()
                     this.invencible = true
-                    setTimeout(() => {
-                        this.invencible = false
-                    }, 1000);
+                    setTimeout(() => this.invencible = false, 1000);
                     enemy._pos.y += 100
                 }
             })
@@ -277,9 +253,7 @@ const game = {
     },
     fireMode() {
         if (this.checkCollision(this.flames)) {
-            setTimeout(() => {
-                this.invencible = false
-            }, 10000)
+            setTimeout(() => this.invencible = false, 10000)
             setTimeout(() => {
                 this.fireModeEnabled = false
                 this.mainBackSrc = './images/background.jpg'
@@ -311,9 +285,7 @@ const game = {
             this.mainSound.stop()
             this.winSound = new Sound(this.winSoundSrc)
             this.winSound.play()
-            setTimeout(() => {
-                this.mainBack.draw()
-            }, 100)
+            setTimeout(() => this.mainBack.draw(), 100)
             clearInterval(this.intervalID)
         }
     },
@@ -324,27 +296,16 @@ const game = {
             this.gameoverSound.play()
             this.mainBackSrc = './images/gameover.png'
             this.mainBack = new Background(this.ctx, this.gameSize, this.mainBackSrc)
-            setTimeout(() => {
-                this.mainBack.draw()
-            }, 100)
+            setTimeout(() => this.mainBack.draw(), 100)
             clearInterval(this.intervalID)
         }
     },
     goUp() {
-        this.platformsArr.forEach(platform => {
-            return platform._pos.y -= this.qbert._velY
-        })
         this.distanceFromFloor++
-
-        this.effects.forEach(effect => {
-            return effect._pos.y -= this.qbert._velY
-        })
-        this.enemies.forEach(enemy => {
-            return enemy._pos.y -= this.qbert._velY
-        })
-        this.flames.forEach(enemy => {
-            return enemy._pos.y -= this.qbert._velY
-        })
+        this.platformsArr.forEach(platform => platform._pos.y -= this.qbert._velY)
+        this.effects.forEach(effect => effect._pos.y -= this.qbert._velY)
+        this.enemies.forEach(enemy => enemy._pos.y -= this.qbert._velY)
+        this.flames.forEach(enemy => enemy._pos.y -= this.qbert._velY)
     },
     mobile() {
         window.addEventListener('deviceorientation', (event) => {
