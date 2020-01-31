@@ -5,7 +5,7 @@
 
 @font-face {
     font-family: pixel;
-    src: url(/fonts/Pixelmania.ttf);
+    src: url(./../fonts/Pixelmania.ttf);
 }
 
 body {

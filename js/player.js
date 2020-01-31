@@ -5,7 +5,7 @@ class Player {
         this._gameSize = gameSize
         // IMAGEN DEL PLAYER
         this._player = new Image()
-        this._player.src = "/images/qbertspr-left.png"
+        this._player.src = "./../images/qbertspr-left.png"
         // FRAMES
         this._player.frames = 2 // TIENE DOS FRAMES
         this._player.framesIndex = 0 // EMPIEZA EN EL 0
@@ -79,11 +79,11 @@ class Player {
         document.onkeydown = (e) => {
             switch (e.code) {
                 case 'KeyD':
-                    this._player.src = '/images/qbertspr-right.png'
+                    this._player.src = './../images/qbertspr-right.png'
                     this._pos.x += this._velX
                     break;
                 case 'KeyA':
-                    this._player.src = '/images/qbertspr-left.png'
+                    this._player.src = './../images/qbertspr-left.png'
                     this._pos.x -= this._velX
                     break;
                 case 'KeyW':

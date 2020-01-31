@@ -19,7 +19,7 @@ const game = {
     score: 0,
     velX: 10,
     // BACKGROUND PROPERTIES
-    mainBackSrc: '/images/background.jpg',
+    mainBackSrc: './../images/background.jpg',
     mainBack: undefined,
     // PLAYER GENERAL
     playerSize: {
@@ -31,25 +31,25 @@ const game = {
     // PLATFORMS ARRAY
     platformsArr: [],
     // SOUNDS
-    jumpSoundSrc: '/sounds/jump.wav',
+    jumpSoundSrc: './../sounds/jump.wav',
     jumpSound: undefined,
-    mainSoundSrc: '/sounds/main.mp3',
+    mainSoundSrc: './../sounds/main.mp3',
     mainSound: undefined,
-    springSoundSrc: '/sounds/spring.wav',
+    springSoundSrc: './../sounds/spring.wav',
     springSound: undefined,
-    shootSoundSrc: '/sounds/laser.mp3',
+    shootSoundSrc: './../sounds/laser.mp3',
     shootSound: undefined,
-    firemodeSoundSrc: '/sounds/fireMode.mp3',
+    firemodeSoundSrc: './../sounds/fireMode.mp3',
     firemodeSound: undefined,
-    gameoverSoundSrc: '/sounds/gameover.wav',
+    gameoverSoundSrc: './../sounds/gameover.wav',
     gameoverSound: undefined,
-    enemyappearSrc: '/sounds/enemyappear.wav',
+    enemyappearSrc: './../sounds/enemyappear.wav',
     enemyappear: undefined,
-    enemydeathSoundSrc: '/sounds/enemydeath.wav',
+    enemydeathSoundSrc: './../sounds/enemydeath.wav',
     enemydeathSound: undefined,
-    winSoundSrc: '/sounds/win.wav',
+    winSoundSrc: './../sounds/win.wav',
     winSound: undefined,
-    brokeSoundSrc: '/sounds/broke.wav',
+    brokeSoundSrc: './../sounds/broke.wav',
     brokeSound: undefined,
     // FIRE MODE
     fireModeEnabled: false,
@@ -282,7 +282,7 @@ const game = {
             }, 10000)
             setTimeout(() => {
                 this.fireModeEnabled = false
-                this.mainBackSrc = '/images/background.jpg'
+                this.mainBackSrc = './../images/background.jpg'
                 this.mainBack = new Background(this.ctx, this.gameSize, this.mainBackSrc)
                 this.firemodeSound.stop()
                 this.mainSound.play()
@@ -291,7 +291,7 @@ const game = {
             this.fireModeEnabled = true
             this.invencible = true
             this.flames = []
-            this.mainBackSrc = '/images/back-flames.png'
+            this.mainBackSrc = './../images/back-flames.png'
             this.mainBack = new Background(this.ctx, this.gameSize, this.mainBackSrc)
             this.mainSound.stop()
             // SONIDO FIRE MODE
@@ -305,7 +305,7 @@ const game = {
     },
     win() {
         if (this.score >= 500) {
-            this.mainBackSrc = '/images/win.png'
+            this.mainBackSrc = './../images/win.png'
             this.mainBack = new Background(this.ctx, this.gameSize, this.mainBackSrc)
             this.firemodeSound.stop()
             this.mainSound.stop()
@@ -322,7 +322,7 @@ const game = {
             this.mainSound.stop()
             this.gameoverSound = new Sound(this.gameoverSoundSrc)
             this.gameoverSound.play()
-            this.mainBackSrc = '/images/gameover.png'
+            this.mainBackSrc = './../images/gameover.png'
             this.mainBack = new Background(this.ctx, this.gameSize, this.mainBackSrc)
             setTimeout(() => {
                 this.mainBack.draw()
