@@ -26,7 +26,7 @@ class Spring extends Powerup {
         }
         // IMAGEN
         this._powerUp = new Image()
-        this._powerUp.src = './../images/spring.png'
+        this._powerUp.src = './images/spring.png'
     }
 }
 
@@ -46,6 +46,6 @@ class Flame extends Spring {
         }
         // IMAGEN
         this._powerUp = new Image()
-        this._powerUp.src = './../images/flame.png'
+        this._powerUp.src = './images/flame.png'
     }
 }

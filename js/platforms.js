@@ -31,7 +31,7 @@ class BrokenPlatform extends GeneralPlatform {
         super(ctx, gameSize, i)
         // IMAGEN
         this._platform = new Image()
-        this._platform.src = "./../images/broken-platform-spr.png"
+        this._platform.src = "./images/broken-platform-spr.png"
         // FRAMES
         this._platform.frames = 2 // TIENE DOS FRAMES
         this._platform.framesIndex = 0 // EMPIEZA EN EL 0

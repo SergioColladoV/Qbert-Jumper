@@ -16,7 +16,7 @@ class Donkey {
         }
         // IMAGEN
         this._donkey = new Image()
-        this._donkey.src = './../images/donkey-kong.png'
+        this._donkey.src = './images/donkey-kong.png'
     }
 
     draw() {
