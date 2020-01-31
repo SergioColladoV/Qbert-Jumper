@@ -279,25 +279,25 @@ const game = {
     },
     win() {
         if (this.score >= 500) {
-            this.mainBackSrc = './images/win.png'
-            this.mainBack = new Background(this.ctx, this.gameSize, this.mainBackSrc)
+            clearInterval(this.intervalID)
             this.firemodeSound.stop()
             this.mainSound.stop()
             this.winSound = new Sound(this.winSoundSrc)
             this.winSound.play()
-            setTimeout(() => this.mainBack.draw(), 100)
-            clearInterval(this.intervalID)
+            this.mainBackSrc = './images/win.png'
+            this.mainBack = new Background(this.ctx, this.gameSize, this.mainBackSrc)
+            setTimeout(() => this.mainBack.draw(), 500)
         }
     },
     gameOver() {
         if ((!this.invencible && this.checkEnemyCollision()) || (this.qbert._pos.y + this.qbert._size.height) >= this.gameSize.height) {
+            clearInterval(this.intervalID)
             this.mainSound.stop()
             this.gameoverSound = new Sound(this.gameoverSoundSrc)
             this.gameoverSound.play()
             this.mainBackSrc = './images/gameover.png'
             this.mainBack = new Background(this.ctx, this.gameSize, this.mainBackSrc)
-            setTimeout(() => this.mainBack.draw(), 100)
-            clearInterval(this.intervalID)
+            setTimeout(() => this.mainBack.draw(), 500)
         }
     },
     goUp() {
